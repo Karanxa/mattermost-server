@@ -236,27 +236,6 @@ func (_m *Store) GetCurrentSchemaVersion() string {
 	return r0
 }
 
-// GetDbVersion provides a mock function with given fields: numerical
-func (_m *Store) GetDbVersion(numerical bool) (string, error) {
-	ret := _m.Called(numerical)
-
-	var r0 string
-	if rf, ok := ret.Get(0).(func(bool) string); ok {
-		r0 = rf(numerical)
-	} else {
-		r0 = ret.Get(0).(string)
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(bool) error); ok {
-		r1 = rf(numerical)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // Group provides a mock function with given fields:
 func (_m *Store) Group() store.GroupStore {
 	ret := _m.Called()

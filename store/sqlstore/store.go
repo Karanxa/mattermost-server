@@ -418,21 +418,24 @@ func (ss *SqlStore) GetCurrentSchemaVersion() string {
 // GetDbVersion returns the version of the database being used.
 // If numerical is set to true, it attempts to return a numerical version string
 // that can be parsed by callers.
-func (ss *SqlStore) GetDbVersion(numerical bool) (string, error) {
+func GetDbVersion(settings model.SqlSettings, numerical bool) (string, error) {
 	var sqlVersion string
-	if ss.DriverName() == model.DATABASE_DRIVER_POSTGRES {
+	switch *settings.DriverName {
+	case model.DATABASE_DRIVER_POSTGRES:
 		if numerical {
 			sqlVersion = `SHOW server_version_num`
 		} else {
 			sqlVersion = `SHOW server_version`
 		}
-	} else if ss.DriverName() == model.DATABASE_DRIVER_MYSQL {
+	case model.DATABASE_DRIVER_MYSQL:
 		sqlVersion = `SELECT version()`
-	} else {
+	default:
 		return "", errors.New("Not supported driver")
 	}
 
-	version, err := ss.GetReplica().SelectStr(sqlVersion)
+	db := setupConnection("master", *settings.DataSource, &settings)
+	defer db.Db.Close()
+	version, err := db.SelectStr(sqlVersion)
 	if err != nil {
 		return "", err
 	}

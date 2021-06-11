@@ -20,6 +20,7 @@ import (
 	"github.com/mattermost/mattermost-server/v5/services/searchengine"
 	"github.com/mattermost/mattermost-server/v5/shared/mlog"
 	"github.com/mattermost/mattermost-server/v5/store"
+	"github.com/mattermost/mattermost-server/v5/store/sqlstore"
 	"github.com/mattermost/mattermost-server/v5/utils"
 )
 
@@ -933,7 +934,7 @@ func (ts *TelemetryService) trackServer() {
 		data["system_admins"] = scr
 	}
 
-	if scr, err := ts.dbStore.GetDbVersion(false); err == nil {
+	if scr, err := sqlstore.GetDbVersion(ts.srv.Config().SqlSettings, false); err == nil {
 		data["database_version"] = scr
 	}
 

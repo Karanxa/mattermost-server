@@ -20,6 +20,7 @@ import (
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/shared/mlog"
 	"github.com/mattermost/mattermost-server/v5/store"
+	"github.com/mattermost/mattermost-server/v5/store/sqlstore"
 	"github.com/mattermost/mattermost-server/v5/utils"
 )
 
@@ -361,7 +362,7 @@ func (a *App) UpdateProductNotices() *model.AppError {
 		mlog.Warn("Failed to fetch user count", mlog.String("error", err.Error()))
 	}
 
-	cachedDBMSVersion, err = a.Srv().Store.GetDbVersion(false)
+	cachedDBMSVersion, err = sqlstore.GetDbVersion(a.Config().SqlSettings, false)
 	if err != nil {
 		mlog.Warn("Failed to get DBMS version", mlog.String("error", err.Error()))
 	}
